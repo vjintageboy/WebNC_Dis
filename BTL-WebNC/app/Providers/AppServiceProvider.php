@@ -21,4 +21,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+    protected $policies = [
+        Course::class => CoursePolicy::class,
+    ];
 }

@@ -47,4 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function hasRole($role)
+{
+    // Tùy vào cách bạn lưu role trong database
+    return $this->role === $role;
+}
 }
