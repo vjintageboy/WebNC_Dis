@@ -11,13 +11,25 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        // Tạo tài khoản admin nếu chưa tồn tại
+        Role::create([
+            'name' => 'Student',
+            'slug' => 'student',
+            'description' => 'Student Role'
+        ]);
+
+        Role::create([
+            'name' => 'Instructor',
+            'slug' => 'instructor',
+            'description' => 'Instructor Role'
+        ]);
+
+        // Tạo tài khoản Student nếu chưa tồn tại
         $admin = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'student@example.com'],
             [
-                'name'     => 'Admin User',
+                'name'     => 'Student User',
                 'password' => Hash::make('password'),
-                'role'     => 'admin'
+                'role'     => 'student'
             ]
         );
 
@@ -46,6 +58,10 @@ class DatabaseSeeder extends Seeder
             'price'         => 799000,
             'instructor_id' => $instructor->id,
             'status'        => 'active'
+        ]);
+        $this->call([
+            RoleSeeder::class,
+            // other seeders...
         ]);
     }
 }

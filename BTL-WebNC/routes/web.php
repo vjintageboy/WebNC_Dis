@@ -9,7 +9,7 @@ use App\Http\Controllers\AdminController;
 
 
 //Instructor routes
-    //Route::middleware(['role:instructor'])->group(function () {
+    Route::middleware(['role:instructor'])->group(function () {
         //Instructor-specific course and lesson management
         Route::get('/instructor/courses', [CourseController::class, 'instructorCourses'])->name('instructor.courses');
         //Đặt các routes cụ thể trước routes có tham số
@@ -17,8 +17,14 @@ use App\Http\Controllers\AdminController;
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
         Route::resource('courses', CourseController::class)->except(['index', 'show', 'create', 'store']);
         Route::resource('lessons', LessonController::class);
-    //});
-    //Tạm thời vô hiệu hóa middleware để kiểm tra
+    });
+
+    // Admin routes
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/admin/courses', [AdminController::class, 'courses'])->name('admin.courses');
+    });
 // Public routes
 Route::get('/', [CourseController::class, 'index'])->name('home');
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
@@ -38,12 +44,7 @@ Route::middleware(['auth'])->group(function () {
 
    
 
-    // Admin routes
-    Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-        Route::get('/admin/courses', [AdminController::class, 'courses'])->name('admin.courses');
-    });
+    
 
     // Enrollment routes
     Route::delete('/enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
