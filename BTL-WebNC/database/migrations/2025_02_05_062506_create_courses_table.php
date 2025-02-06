@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Chạy migration.
      */
     public function up()
     {
@@ -15,16 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('instructor_id')->constrained('users')->onDelete('cascade');
+            // Định nghĩa khóa ngoại cho cột instructor_id, cho phép null nếu cần
+            $table->foreignId('instructor_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->decimal('price', 10, 2)->nullable();
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }
     
-
     /**
-     * Reverse the migrations.
+     * Hoàn tác migration.
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('courses');
     }
