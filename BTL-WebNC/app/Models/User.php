@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',    // Thêm role
+        'role_id',    // Thêm role
     ];
     
 
@@ -47,13 +47,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function role()
+    public function roleRelation()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id');
     }
-    public function hasRole($role)
+
+    public function hasRole($roleName)
 {
-    // Tùy vào cách bạn lưu role trong database
-    return $this->role === $role;
+    // Get the role through the relationship
+    $userRole = $this->roleRelation;
+    
+    if (!$userRole) {
+        return false;
+    }
+    
+    return $userRole->slug === $roleName;
+}
+
+// Modify the accessor to return the role object
+public function getRoleAttribute()
+{
+    return $this->roleRelation;
 }
 }
+

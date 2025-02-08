@@ -5,41 +5,43 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        Role::create([
+        // Tạo roles trước
+        $studentRole = Role::create([
             'name' => 'Student',
             'slug' => 'student',
             'description' => 'Student Role'
         ]);
 
-        Role::create([
+        $instructorRole = Role::create([
             'name' => 'Instructor',
             'slug' => 'instructor',
             'description' => 'Instructor Role'
         ]);
 
-        // Tạo tài khoản Student nếu chưa tồn tại
-        $admin = User::firstOrCreate(
+        // Tạo tài khoản Student
+        $student = User::firstOrCreate(
             ['email' => 'student@example.com'],
             [
-                'name'     => 'Student User',
+                'name' => 'Student User',
                 'password' => Hash::make('password'),
-                'role'     => 'student'
+                'role_id' => $studentRole->id  // Sử dụng role_id thay vì role
             ]
         );
 
-        // Tạo tài khoản giảng viên nếu chưa tồn tại
+        // Tạo tài khoản Instructor
         $instructor = User::firstOrCreate(
             ['email' => 'instructor@example.com'],
             [
-                'name'     => 'Instructor User',
+                'name' => 'Instructor User',
                 'password' => Hash::make('password'),
-                'role'     => 'instructor'
+                'role_id' => $instructorRole->id  // Sử dụng role_id thay vì role
             ]
         );
 
@@ -58,10 +60,6 @@ class DatabaseSeeder extends Seeder
             'price'         => 799000,
             'instructor_id' => $instructor->id,
             'status'        => 'active'
-        ]);
-        $this->call([
-            RoleSeeder::class,
-            // other seeders...
         ]);
     }
 }

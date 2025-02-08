@@ -23,16 +23,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('courses.index') }}">Khóa học</a>
                     </li>
-                    @if(auth()->guard()->check())
+                    @auth
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('my-courses') }}">Khóa học của tôi</a>
                         </li>
-                        @if(auth()->user()->role === 'instructor')
+                        @if(auth()->user()->hasRole('instructor'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('instructor.courses') }}">Quản lý khóa học</a>
                             </li>
                         @endif
-                        @if(auth()->user()->role === 'admin')
+                        @if(auth()->user()->hasRole('admin'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin</a>
                             </li>

@@ -10,9 +10,7 @@ use App\Http\Controllers\AdminController;
 
 //Instructor routes
     Route::middleware(['role:instructor'])->group(function () {
-        //Instructor-specific course and lesson management
         Route::get('/instructor/courses', [CourseController::class, 'instructorCourses'])->name('instructor.courses');
-        //Đặt các routes cụ thể trước routes có tham số
         Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
         Route::resource('courses', CourseController::class)->except(['index', 'show', 'create', 'store']);
@@ -41,7 +39,11 @@ Route::middleware(['auth'])->group(function () {
     // Student routes
     Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('enrollments.store');
     Route::get('/my-courses', [EnrollmentController::class, 'index'])->name('my-courses');
-
+    // Enrollment routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('enroll.store');
+    Route::delete('/courses/{course}/enroll', [EnrollmentController::class, 'destroy'])->name('enroll.destroy');
+});
    
 
     
