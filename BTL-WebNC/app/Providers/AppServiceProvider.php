@@ -1,31 +1,36 @@
 <?php
 
 namespace App\Providers;
-use App\Models\Role;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
+
 {
     /**
-     * Register any application services.
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
      */
-    public function register()
-    {
-        // Sửa lại cách binding Role
-        $this->app->singleton('role', function ($app) {
-            return new Role();
-        });
-    }
+    protected $policies = [
+        // Định nghĩa các policies ở đây
+    ];
 
     /**
-     * Bootstrap any application services.
+     * Register any authentication / authorization services.
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+
+        // Định nghĩa các gates ở đây nếu cần
+        Gate::define('manage-courses', function ($user) {
+            return $user->hasRole('instructor');
+        });
+
+        Gate::define('enroll-courses', function ($user) {
+            return $user->hasRole('student');
+        });
     }
-    protected $policies = [
-        Course::class => CoursePolicy::class,
-    ];
 }
